@@ -1,7 +1,7 @@
 ![language](https://github.com/jagadeeshkmanne/dsa/blob/master/resources/language-java-blue.svg?raw=true)
 ### Kadane's Algorithm & Beyond
 
-<div style="font-size: 12px; white-space: nowrap;">
+<div style="font-size: 8px; white-space: nowrap;">
 <table>
   <tr>
     <th>LeetCode Problem Number</th>
