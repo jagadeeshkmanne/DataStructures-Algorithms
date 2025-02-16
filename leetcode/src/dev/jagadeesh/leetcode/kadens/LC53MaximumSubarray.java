@@ -10,7 +10,17 @@ public class LC53MaximumSubarray {
 
 class LC53Solution {
     public int maxSubArray(int[] nums) {
-        // TODO: implement Kadane's algorithm for Maximum Subarray
-        return 0;
+
+        if (nums.length == 0) {
+            return 0;
+        }
+
+        int maxCurrentSum = nums[0];
+        int maxGlobalSum = nums[0];
+        for (int i = 1; i < nums.length; i++) {
+            maxCurrentSum  = Math.max(nums[i], nums[i] + maxCurrentSum);
+            maxGlobalSum = Math.max(maxGlobalSum, maxCurrentSum);
+        }
+        return maxGlobalSum;
     }
 }
