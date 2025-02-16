@@ -10,7 +10,31 @@ public class LC152MaximumProductSubarray {
 
 class LC152Solution {
     public int maxProduct(int[] nums) {
-        // TODO: implement solution for Maximum Product Subarray
-        return 0;
+        if (nums == null || nums.length == 0) {
+            return 0;
+        }
+
+        int maxProd = nums[0];
+        int minProd = nums[0];
+        int result  = nums[0];
+
+        for (int i = 1; i < nums.length; i++) {
+            int current = nums[i];
+
+            // Pre-compute the candidate products using old values of maxProd and minProd.
+            int candidate1 = maxProd * current;
+            int candidate2 = minProd * current;
+
+            int maxAtCurrentElement = Math.max(candidate1, candidate2);
+            int minAtCurrentElement = Math.min(candidate1, candidate2);
+
+            // Directly update maxProd and minProd using the pre-computed candidates.
+            maxProd = Math.max(current, maxAtCurrentElement);
+            minProd = Math.min(current, minAtCurrentElement);
+
+            result = Math.max(result, maxProd);
+        }
+
+        return result;
     }
 }
