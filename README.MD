@@ -1,6 +1,6 @@
 ![language](https://github.com/jagadeeshkmanne/dsa/blob/master/resources/language-java-blue.svg?raw=true)
 ### Kadane's Algorithm & Beyond
-For an in-depth look at Kadane's Algorithm, check out the [Kadane's Algorithm - Essential Guide](src/dev/jagadeesh/leetcode/kadens/README.md).
+For an in-depth look at Kadane's Algorithm, check out the [Kadane's Algorithm - Essential Guide](./src/dev/jagadeesh/leetcode/kadens/README.md).
 
 <div style="font-size: 5px; white-space: nowrap;">
 <table>
