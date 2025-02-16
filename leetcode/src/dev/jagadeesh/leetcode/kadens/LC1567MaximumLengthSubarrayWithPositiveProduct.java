@@ -1,4 +1,4 @@
-package dev.jagadeesh.leetcode;
+package dev.jagadeesh.leetcode.kadens;
 
 public class LC1567MaximumLengthSubarrayWithPositiveProduct {
     public static void main(String[] args) {

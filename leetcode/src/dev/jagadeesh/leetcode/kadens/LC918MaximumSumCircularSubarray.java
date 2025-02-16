@@ -1,4 +1,4 @@
-package dev.jagadeesh.leetcode;
+package dev.jagadeesh.leetcode.kadens;
 
 public class LC918MaximumSumCircularSubarray {
     public static void main(String[] args) {

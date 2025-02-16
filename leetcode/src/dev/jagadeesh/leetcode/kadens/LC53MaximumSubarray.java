@@ -1,4 +1,4 @@
-package dev.jagadeesh.leetcode;
+package dev.jagadeesh.leetcode.kadens;
 
 public class LC53MaximumSubarray {
     public static void main(String[] args) {
