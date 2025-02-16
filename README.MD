@@ -2,7 +2,7 @@
 ### Kadane's Algorithm & Beyond
 For an in-depth look at Kadane's Algorithm, check out the [Kadane's Algorithm - Essential Guide](src/dev/jagadeesh/leetcode/kadens/README.md).
 
-<div style="font-size: 12px; white-space: nowrap;">
+<div style="font-size: 5px; white-space: nowrap;">
 <table>
   <tr>
     <th>LeetCode Problem Number</th>
