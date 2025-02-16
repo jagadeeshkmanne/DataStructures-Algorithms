@@ -1,8 +1,8 @@
 ![language](https://github.com/jagadeeshkmanne/dsa/blob/master/resources/language-java-blue.svg?raw=true)
-## Kadane's Algorithm & Beyond
+### Kadane's Algorithm & Beyond
 
-<small>
-<table style="font-size: small; white-space: nowrap;">
+<div style="font-size: 12px; white-space: nowrap;">
+<table>
   <tr>
     <th>LeetCode Problem Number</th>
     <th>Problem Name</th>
@@ -59,4 +59,4 @@
     <td><a href="src/dev/jagadeesh/leetcode/kadens/LC1567MaximumLengthSubarrayWithPositiveProduct.java">LC1567MaximumLengthSubarrayWithPositiveProduct.java</a></td>
   </tr>
 </table>
-</small>
+</div>
