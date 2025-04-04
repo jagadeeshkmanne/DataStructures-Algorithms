@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 
 public class AppLogger {
-    // 1. Single static instance
-    private static AppLogger instance;
+    // 1. volatile ensures visibility across threads
+    private static volatile AppLogger instance;
     private FileWriter logFile;
     
     // 2. Private constructor
@@ -13,23 +13,27 @@ public class AppLogger {
         try {
             // Create logs directory if it doesn't exist
             new File("logs").mkdir();
-            // Initialize log file
+            // Initialize log file (append mode)
             logFile = new FileWriter("logs/app.log", true);
         } catch (IOException e) {
             System.err.println("Failed to initialize logger: " + e.getMessage());
         }
     }
     
-    // 3. Global access point
+    // 3. Thread-safe global access point with double-checked locking
     public static AppLogger getInstance() {
-        if (instance == null) {
-            instance = new AppLogger();
+        if (instance == null) {                          // First check (no locking)
+            synchronized (AppLogger.class) {             // Synchronize only when needed
+                if (instance == null) {                  // Second check (locked)
+                    instance = new AppLogger();
+                }
+            }
         }
         return instance;
     }
     
-    // Business method
-    public void log(String message) {
+    // Synchronized business method for thread-safe logging
+    public synchronized void log(String message) {
         try {
             String timestamp = LocalDateTime.now().toString();
             logFile.write(timestamp + " - " + message + "\n");
@@ -39,10 +43,12 @@ public class AppLogger {
         }
     }
     
-    // Cleanup method
-    public void close() {
+    // Synchronized cleanup method
+    public synchronized void close() {
         try {
-            logFile.close();
+            if (logFile != null) {
+                logFile.close();
+            }
         } catch (IOException e) {
             System.err.println("Failed to close logger: " + e.getMessage());
         }
@@ -52,7 +58,7 @@ public class AppLogger {
 // Usage Example
 public class Main {
     public static void main(String[] args) {
-        // Get logger instance
+        // Get logger instance - now thread-safe
         AppLogger logger = AppLogger.getInstance();
         
         // Log some messages
@@ -60,7 +66,7 @@ public class Main {
         logger.log("User logged in");
         logger.log("Processing data...");
         
-        // All components use the same logger
+        // All components use the same thread-safe logger
         DatabaseService dbService = new DatabaseService();
         dbService.connect();
         
