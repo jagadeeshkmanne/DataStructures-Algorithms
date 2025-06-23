@@ -6,16 +6,16 @@ Complete DP pattern collection for mastering dynamic programming through pattern
 
 ## 📋 **All DP Patterns**
 
-| Pattern | Identification Tips |
-|---------|-------------------|
-| **[Decision Making](./dp/decision-making.md)** | Take/skip choices with adjacent constraints |
-| **[Knapsack](./dp/knapsack.md)** | Limited capacity + items with cost/value |
-| **[Grid Path](./dp/grid-path.md)** | 2D movement with path optimization |
-| **[String DP](./dp/string-dp.md)** | Two strings character comparison |
-| **[Tree DP](./dp/tree-dp.md)** | Tree structure with node choices |
-| **[Graph DP](./dp/graph-dp.md)** | DAG traversal with optimization |
-| **[Interval DP](./dp/interval-dp.md)** | Optimal range splitting |
-| **[LIS Pattern](./dp/lis-pattern.md)** | Longest increasing sequence |
+| Pattern | Identification Tips | Example Problems |
+|---------|-------------------|------------------|
+| **[Decision Making](./dp/decision-making.md)** | "Can't take adjacent/consecutive items" | House Robber, Climbing Stairs |
+| **[Knapsack](./dp/knapsack.md)** | "Limited budget/capacity + items to choose" | Coin Change, Target Sum |
+| **[Grid Path](./dp/grid-path.md)** | "Move in 2D grid from top-left to bottom-right" | Unique Paths, Min Path Sum |
+| **[String DP](./dp/string-dp.md)** | "Two strings + words like 'common', 'edit', 'transform'" | Edit Distance, LCS |
+| **[Tree DP](./dp/tree-dp.md)** | "Binary tree + 'maximum path sum' in problem title" | Binary Tree Max Path Sum |
+| **[Graph DP](./dp/graph-dp.md)** | "Matrix + 'longest increasing path' or similar" | Longest Path in Matrix |
+| **[Interval DP](./dp/interval-dp.md)** | "Array + 'burst', 'split optimally', 'chain multiplication'" | Burst Balloons, Matrix Chain |
+| **[LIS Pattern](./dp/lis-pattern.md)** | "'Longest increasing subsequence' or 'arrange in order'" | LIS, Russian Doll Envelopes |
 
 ---
 
