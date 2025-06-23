@@ -1,111 +1,167 @@
-# Dynamic Programming - Grid/Path Pattern (Java 6 Compatible)
+# Dynamic Programming - Grid Path Pattern
 
 ## 🎯 Pattern Overview
 
-Grid DP is for 2D grid problems where you move from top-left to bottom-right. Current cell depends on previous cells (usually top and left).
+The **Grid Path Pattern** is for 2D grid problems where you move from one position to another (usually top-left to bottom-right). The value at each cell depends on values from previous cells.
 
----
-
-## 🚀 Reusable Helper Methods (Java 6 Style)
-
-```java
-public class GridDPHelpers {
-    
-    // Helper 1: Initialize boundaries with value
-    public static void initBoundaries(int[][] dp, int m, int n, int value) {
-        // First row
-        for (int j = 0; j < n; j++) {
-            dp[0][j] = value;
-        }
-        // First column
-        for (int i = 0; i < m; i++) {
-            dp[i][0] = value;
-        }
-    }
-    
-    // Helper 2: Initialize boundaries with obstacles
-    public static void initBoundariesWithObstacles(int[][] dp, int[][] obstacles, int m, int n) {
-        dp[0][0] = obstacles[0][0] == 0 ? 1 : 0;
-        
-        // First row
-        for (int j = 1; j < n; j++) {
-            if (obstacles[0][j] == 0 && dp[0][j-1] == 1) {
-                dp[0][j] = 1;
-            } else {
-                dp[0][j] = 0;
-            }
-        }
-        
-        // First column
-        for (int i = 1; i < m; i++) {
-            if (obstacles[i][0] == 0 && dp[i-1][0] == 1) {
-                dp[i][0] = 1;
-            } else {
-                dp[i][0] = 0;
-            }
-        }
-    }
-    
-    // Helper 3: Initialize boundaries by accumulating grid values
-    public static void initBoundariesWithSum(int[][] dp, int[][] grid, int m, int n) {
-        dp[0][0] = grid[0][0];
-        
-        // First row - accumulate
-        for (int j = 1; j < n; j++) {
-            dp[0][j] = dp[0][j-1] + grid[0][j];
-        }
-        
-        // First column - accumulate
-        for (int i = 1; i < m; i++) {
-            dp[i][0] = dp[i-1][0] + grid[i][0];
-        }
-    }
-    
-    // Helper 4: Copy first row from source to dp
-    public static void copyFirstRow(int[][] dp, int[][] source, int n) {
-        for (int j = 0; j < n; j++) {
-            dp[0][j] = source[0][j];
-        }
-    }
-    
-    // Helper 5: Standard grid filling loop (reusable across all templates!)
-    public static void fillGrid(int[][] dp, int m, int n, int startRow, int startCol) {
-        // Standard nested loop that ALL grid problems use
-        // startRow and startCol are usually 1, but can be 0 for special cases
-        for (int i = startRow; i < m; i++) {
-            for (int j = startCol; j < n; j++) {
-                // The actual formula will be applied in the template
-                // This just provides the iteration structure
-            }
-        }
-    }
-}
+### Core Concept:
+```
+Start: Top-left corner (0,0)
+End: Bottom-right corner (m-1, n-1)
+Movement: Can only move right or down (usually)
+Goal: Count paths, minimize cost, or maximize value
 ```
 
 ---
 
-## 🚀 Universal Templates
+## 🔍 Pattern Recognition
 
-### Template 1: Path Counting (With/Without Obstacles)
+### ✅ Quick Recognition Checklist
+- [ ] 2D grid/matrix problem?
+- [ ] Need to go from point A to point B?
+- [ ] Limited movement directions?
+- [ ] Each cell depends on previous cells?
+→ If all YES → Grid Path Pattern!
+
+### Magic Keywords:
+| Keyword | Example |
+|---------|---------|
+| "grid", "matrix" | Grid traversal |
+| "paths from top-left to bottom-right" | Unique Paths |
+| "minimum/maximum path sum" | Min Path Sum |
+| "can only move right/down" | Classic grid DP |
+
+### Quick Test:
+```
+✓ Am I in a 2D grid?
+✓ Do I move between cells?
+✓ Does current cell depend on neighbors?
+→ Grid Path Pattern! ✅
+```
+
+---
+
+## 🚀 Universal Template
+
+### The Core Template (Works for 90% of problems):
 
 ```java
-public int gridPathCount(int m, int n, int[][] obstacles) {
+public int gridDP(int[][] grid, String operation) {
+    int m = grid.length;
+    int n = grid[0].length;
     int[][] dp = new int[m][n];
     
-    // Initialize boundaries based on obstacles
-    if (obstacles == null) {
-        GridDPHelpers.initBoundaries(dp, m, n, 1);
-    } else {
-        if (obstacles[0][0] == 1 || obstacles[m-1][n-1] == 1) {
-            return 0;  // Can't start or end
+    // Base case: starting cell
+    dp[0][0] = (operation.equals("count")) ? 1 : grid[0][0];
+    
+    // Initialize first row (can only come from left)
+    for (int j = 1; j < n; j++) {
+        if (operation.equals("count")) {
+            dp[0][j] = dp[0][j-1];
+        } else {
+            dp[0][j] = dp[0][j-1] + grid[0][j];
         }
-        GridDPHelpers.initBoundariesWithObstacles(dp, obstacles, m, n);
+    }
+    
+    // Initialize first column (can only come from top)
+    for (int i = 1; i < m; i++) {
+        if (operation.equals("count")) {
+            dp[i][0] = dp[i-1][0];
+        } else {
+            dp[i][0] = dp[i-1][0] + grid[i][0];
+        }
     }
     
     // Fill the grid
     for (int i = 1; i < m; i++) {
         for (int j = 1; j < n; j++) {
-            if (obstacles == null || obstacles[i][j] == 0) {
+            if (operation.equals("count")) {
+                dp[i][j] = dp[i-1][j] + dp[i][j-1];
+            } else if (operation.equals("min")) {
+                dp[i][j] = grid[i][j] + Math.min(dp[i-1][j], dp[i][j-1]);
+            } else if (operation.equals("max")) {
+                dp[i][j] = grid[i][j] + Math.max(dp[i-1][j], dp[i][j-1]);
+            }
+        }
+    }
+    
+    return dp[m-1][n-1];
+}
+```
+
+---
+
+## 📋 Common Problem Types
+
+### 1. **Count Paths**
+Count number of unique paths from top-left to bottom-right.
+
+```java
+public int uniquePaths(int m, int n) {
+    // Create dummy grid since we're just counting
+    int[][] dummyGrid = new int[m][n];
+    return gridDP(dummyGrid, "count");
+}
+```
+
+**LeetCode Problems:**
+- [Unique Paths](https://leetcode.com/problems/unique-paths/)
+- [Unique Paths II](https://leetcode.com/problems/unique-paths-ii/) (with obstacles)
+
+---
+
+### 2. **Minimum Path Sum**
+Find path with minimum sum from top-left to bottom-right.
+
+```java
+public int minPathSum(int[][] grid) {
+    return gridDP(grid, "min");
+}
+```
+
+**LeetCode Problems:**
+- [Minimum Path Sum](https://leetcode.com/problems/minimum-path-sum/)
+
+---
+
+### 3. **Maximum Path Sum**
+Find path with maximum sum (less common but same pattern).
+
+```java
+public int maxPathSum(int[][] grid) {
+    return gridDP(grid, "max");
+}
+```
+
+---
+
+### 4. **With Obstacles** (Slight modification)
+When grid has obstacles (usually marked as 1).
+
+```java
+public int uniquePathsWithObstacles(int[][] obstacleGrid) {
+    if (obstacleGrid[0][0] == 1) return 0;
+    
+    int m = obstacleGrid.length;
+    int n = obstacleGrid[0].length;
+    int[][] dp = new int[m][n];
+    
+    dp[0][0] = 1;
+    
+    // First row
+    for (int j = 1; j < n; j++) {
+        dp[0][j] = (obstacleGrid[0][j] == 0 && dp[0][j-1] == 1) ? 1 : 0;
+    }
+    
+    // First column
+    for (int i = 1; i < m; i++) {
+        dp[i][0] = (obstacleGrid[i][0] == 0 && dp[i-1][0] == 1) ? 1 : 0;
+    }
+    
+    // Fill the grid
+    for (int i = 1; i < m; i++) {
+        for (int j = 1; j < n; j++) {
+            if (obstacleGrid[i][j] == 0) {
                 dp[i][j] = dp[i-1][j] + dp[i][j-1];
             }
         }
@@ -115,184 +171,153 @@ public int gridPathCount(int m, int n, int[][] obstacles) {
 }
 ```
 
-### Template 2: Path Value Optimization (Min/Max)
+**LeetCode Problems:**
+- [Unique Paths II](https://leetcode.com/problems/unique-paths-ii/)
+
+---
+
+### 5. **Special Movement Pattern** (Triangle/Falling Path)
+When you can move to multiple cells below (not just right/down).
 
 ```java
-public int gridPathValue(int[][] grid, boolean minimize) {
-    int m = grid.length;
-    int n = grid[0].length;
-    int[][] dp = new int[m][n];
-    
-    // Initialize boundaries
-    GridDPHelpers.initBoundariesWithSum(dp, grid, m, n);
-    
-    // Fill the grid
-    for (int i = 1; i < m; i++) {
-        for (int j = 1; j < n; j++) {
-            int fromTop = dp[i-1][j];
-            int fromLeft = dp[i][j-1];
-            
-            if (minimize) {
-                dp[i][j] = grid[i][j] + Math.min(fromTop, fromLeft);
-            } else {
-                dp[i][j] = grid[i][j] + Math.max(fromTop, fromLeft);
-            }
-        }
-    }
-    
-    return dp[m-1][n-1];
-}
-```
-
-### Template 3: Multiple End Points (Like Falling Path)
-
-```java
-public int gridMultipleEnds(int[][] grid, boolean minimize) {
-    int n = grid.length;
+public int minFallingPathSum(int[][] matrix) {
+    int n = matrix.length;
     int[][] dp = new int[n][n];
     
     // Copy first row
-    GridDPHelpers.copyFirstRow(dp, grid, n);
+    for (int j = 0; j < n; j++) {
+        dp[0][j] = matrix[0][j];
+    }
     
     // Process each row
     for (int i = 1; i < n; i++) {
         for (int j = 0; j < n; j++) {
+            // Can come from: directly above, diagonally left, diagonally right
             int fromAbove = dp[i-1][j];
-            int fromLeft = j > 0 ? dp[i-1][j-1] : Integer.MAX_VALUE;
-            int fromRight = j < n-1 ? dp[i-1][j+1] : Integer.MAX_VALUE;
+            int fromLeft = (j > 0) ? dp[i-1][j-1] : Integer.MAX_VALUE;
+            int fromRight = (j < n-1) ? dp[i-1][j+1] : Integer.MAX_VALUE;
             
-            if (minimize) {
-                dp[i][j] = grid[i][j] + Math.min(fromAbove, Math.min(fromLeft, fromRight));
-            } else {
-                // For maximize version
-                if (j == 0) fromLeft = Integer.MIN_VALUE;
-                if (j == n-1) fromRight = Integer.MIN_VALUE;
-                dp[i][j] = grid[i][j] + Math.max(fromAbove, Math.max(fromLeft, fromRight));
-            }
+            dp[i][j] = matrix[i][j] + Math.min(fromAbove, Math.min(fromLeft, fromRight));
         }
     }
     
-    // Find best value in last row - track while processing for O(1)
-    int result = dp[n-1][0];
+    // Find minimum in last row
+    int minPath = dp[n-1][0];
     for (int j = 1; j < n; j++) {
-        if (minimize) {
-            result = Math.min(result, dp[n-1][j]);
-        } else {
-            result = Math.max(result, dp[n-1][j]);
-        }
-    }
-    return result;
-}
-```
-
----
-
-## 📋 Clean Solutions Using Templates
-
-### 1. **Unique Paths**
-```java
-public int uniquePaths(int m, int n) {
-    return gridPathCount(m, n, null);
-}
-```
-
-### 2. **Unique Paths with Obstacles**
-```java
-public int uniquePathsWithObstacles(int[][] obstacleGrid) {
-    return gridPathCount(obstacleGrid.length, obstacleGrid[0].length, obstacleGrid);
-}
-```
-
-### 3. **Minimum Path Sum**
-```java
-public int minPathSum(int[][] grid) {
-    return gridPathValue(grid, true);
-}
-```
-
-### 4. **Maximum Path Sum**
-```java
-public int maxPathSum(int[][] grid) {
-    return gridPathValue(grid, false);
-}
-```
-
-### 5. **Minimum Falling Path Sum**
-```java
-public int minFallingPathSum(int[][] matrix) {
-    return gridMultipleEnds(matrix, true);
-}
-```
-
----
-
-## 📊 Special Cases (Need Custom Code)
-
-### Maximal Square (Different Formula)
-```java
-public int maximalSquare(char[][] matrix) {
-    if (matrix.length == 0) return 0;
-    
-    int m = matrix.length;
-    int n = matrix[0].length;
-    int[][] dp = new int[m][n];
-    int maxSide = 0;
-    
-    // Can't use standard templates - different pattern
-    for (int i = 0; i < m; i++) {
-        for (int j = 0; j < n; j++) {
-            if (matrix[i][j] == '1') {
-                if (i == 0 || j == 0) {
-                    dp[i][j] = 1;
-                } else {
-                    int top = dp[i-1][j];
-                    int left = dp[i][j-1];
-                    int diagonal = dp[i-1][j-1];
-                    dp[i][j] = Math.min(Math.min(top, left), diagonal) + 1;
-                }
-                maxSide = Math.max(maxSide, dp[i][j]);
-            }
-        }
+        minPath = Math.min(minPath, dp[n-1][j]);
     }
     
-    return maxSide * maxSide;
+    return minPath;
 }
+```
+
+**LeetCode Problems:**
+- [Minimum Falling Path Sum](https://leetcode.com/problems/minimum-falling-path-sum/)
+- [Triangle](https://leetcode.com/problems/triangle/)
+
+---
+
+## 💡 Tips & Strategies
+
+### The Golden Formula:
+```java
+// For counting paths:
+dp[i][j] = dp[i-1][j] + dp[i][j-1]
+
+// For min/max sum:
+dp[i][j] = grid[i][j] + Math.min(dp[i-1][j], dp[i][j-1])
+```
+
+### Common Patterns:
+1. **Standard movement**: Right or Down only
+2. **With obstacles**: Check if cell is valid before processing
+3. **Multiple directions**: Consider all possible previous positions
+4. **Different start/end**: Adjust base cases accordingly
+
+### Space Optimization:
+```java
+// Can often use just 1D array instead of 2D
+// Since we only need previous row
+int[] dp = new int[n];
+int[] temp = new int[n];
 ```
 
 ---
 
-## 💡 Pattern Recognition
+## 📊 Pattern Variations
 
-**Which template to use?**
-
-1. **Counting paths?** → `gridPathCount()`
-   - No obstacles: pass `null`
-   - With obstacles: pass obstacle array
-
-2. **Min/Max path sum?** → `gridPathValue()`
-   - Minimize: pass `true`
-   - Maximize: pass `false`
-
-3. **Multiple choices per cell?** → `gridMultipleEnds()`
-   - Can move to multiple positions below
-
-4. **Special pattern?** → Write custom
-   - Like maximal square (uses 3 neighbors differently)
+| Type | Movement | Example | Key Insight |
+|------|----------|---------|-------------|
+| Basic Path Count | Right/Down | Unique Paths | Simple addition |
+| With Obstacles | Right/Down + blocked cells | Unique Paths II | Check validity |
+| Min/Max Sum | Right/Down | Min Path Sum | Add current cell value |
+| Multiple Directions | 3+ choices | Falling Path | Check all sources |
+| Variable Start/End | Any cell to any cell | Custom problems | Adjust boundaries |
 
 ---
 
-## 🎯 Interview Tips
+## 🧠 Mental Model
 
-1. **The helpers save time** - No need to write initialization loops repeatedly
-2. **Templates handle 80% of problems** - Just call with right parameters
-3. **Time complexity**: Always O(m×n)
-4. **Space optimization**: Mention you can use 1D array for most problems
+Think of it as:
+> "I'm at a cell. Where could I have come from? Take the best option and add my current value."
+
+This works for ALL grid problems:
+- **Counting**: Add ways from all sources
+- **Min sum**: Take minimum from sources + current
+- **Max sum**: Take maximum from sources + current
 
 ---
 
-## 📚 Key Benefits
+## 🎯 Quick Reference
 
-With these templates and helpers:
-- **No repeated code** for initialization
-- **Clean solutions** - just call the template
-- **Easy to modify** - clear structure
+### Problem Identification:
+```
+2D grid + movement? → Grid DP
+Count paths? → Add previous cells
+Min/Max path? → Min/Max of previous + current
+Obstacles? → Check validity first
+Multiple movements? → Consider all sources
+```
+
+### Time & Space:
+- Time: O(m × n)
+- Space: O(m × n) or O(n) with optimization
+
+---
+
+## 📚 Practice Problems (In Order)
+
+### Start Here:
+1. **[Unique Paths](https://leetcode.com/problems/unique-paths/)** - Basic counting
+2. **[Minimum Path Sum](https://leetcode.com/problems/minimum-path-sum/)** - Basic optimization
+3. **[Unique Paths II](https://leetcode.com/problems/unique-paths-ii/)** - With obstacles
+
+### Then Try:
+4. **[Triangle](https://leetcode.com/problems/triangle/)** - Different shape
+5. **[Minimum Falling Path Sum](https://leetcode.com/problems/minimum-falling-path-sum/)** - Multiple directions
+
+### Advanced:
+6. **[Maximal Square](https://leetcode.com/problems/maximal-square/)** - Different recurrence
+7. **[Dungeon Game](https://leetcode.com/problems/dungeon-game/)** - Backward DP
+
+---
+
+## 🎯 Interview Communication Script
+
+```
+"I notice this is a Grid Path DP problem because:
+1. We have a 2D grid
+2. Need to find path from one position to another
+3. Each cell's value depends on previous cells
+
+I'll use dynamic programming where dp[i][j] represents 
+[the number of paths to / minimum cost to reach] cell (i,j).
+
+The recurrence relation is:
+- For counting: dp[i][j] = dp[i-1][j] + dp[i][j-1]
+- For optimization: dp[i][j] = grid[i][j] + min(dp[i-1][j], dp[i][j-1])
+
+Time complexity: O(m×n), Space complexity: O(m×n)"
+```
+
+**Master these patterns and you'll handle 95% of Grid Path DP problems!**
