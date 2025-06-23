@@ -15,6 +15,12 @@ Goal: Find optimal total
 
 ## 🔍 Pattern Recognition
 
+### ✅ Quick Recognition Checklist
+- [ ] Binary choice at each element? (take/skip)
+- [ ] Taking current affects future choices? (constraint)
+- [ ] Optimization goal? (max/min/count)
+→ If all YES → Decision Making Pattern!
+
 ### Key Indicators:
 - **Binary choice** at each element (include/exclude)
 - **Constraint** that prevents taking certain elements together
@@ -39,9 +45,9 @@ Goal: Find optimal total
 
 ---
 
-## 🚀 Universal Template
+## 🚀 Tabulation Approach (Bottom-Up)
 
-### One Template for All Common Cases:
+### Universal Template for Most Cases:
 
 ```java
 public int decisionMakingDP(int[] nums, int start, int end) {
@@ -79,20 +85,111 @@ public int decisionMakingDP(int[] nums, int start, int end) {
 
 ---
 
+## 🚀 Memoization Approach (Top-Down)
+
+### Recursive Template with Caching:
+
+```java
+class DecisionMakingMemo {
+    Map<Integer, Integer> memo = new HashMap<>();
+    
+    public int rob(int[] nums) {
+        return robHelper(nums, 0);
+    }
+    
+    private int robHelper(int[] nums, int index) {
+        // Base cases
+        if (index >= nums.length) return 0;
+        
+        // Check memo
+        if (memo.containsKey(index)) return memo.get(index);
+        
+        // Choice: rob current house OR skip it
+        int robCurrent = nums[index] + robHelper(nums, index + 2);
+        int skipCurrent = robHelper(nums, index + 1);
+        
+        // Store result and return
+        int result = Math.max(robCurrent, skipCurrent);
+        memo.put(index, result);
+        return result;
+    }
+}
+```
+
+### Alternative Memoization (Different State):
+
+```java
+class DecisionMakingMemo2 {
+    Map<String, Integer> memo = new HashMap<>();
+    
+    private int robHelper(int[] nums, int index, boolean canTakePrev) {
+        if (index >= nums.length) return 0;
+        
+        String key = index + "," + canTakePrev;
+        if (memo.containsKey(key)) return memo.get(key);
+        
+        // Choice 1: Skip current
+        int skip = robHelper(nums, index + 1, true);
+        
+        // Choice 2: Take current (only if allowed)
+        int take = 0;
+        if (canTakePrev) {
+            take = nums[index] + robHelper(nums, index + 1, false);
+        }
+        
+        int result = Math.max(skip, take);
+        memo.put(key, result);
+        return result;
+    }
+}
+```
+
+---
+
+## 🎯 When to Use Which Approach
+
+### Use Tabulation When:
+- ✅ **Clear iterative pattern** (most Decision Making problems)
+- ✅ **Need space optimization** (Google loves this follow-up)
+- ✅ **Interview clarity** (easier to explain step by step)
+- ✅ **All subproblems needed** (like basic House Robber)
+
+### Use Memoization When:
+- ✅ **Natural recursive thinking** (easier to conceptualize)
+- ✅ **Complex state representation** (multiple parameters)
+- ✅ **Not all subproblems needed** (sparse solution space)
+- ✅ **Tree-based variations** (House Robber III)
+
+### Interview Strategy:
+```
+1. Start with tabulation (clearer explanation)
+2. Mention: "I can also solve this recursively with memoization"
+3. If asked: Show memoization approach
+4. Explain trade-offs when asked
+```
+
+---
+
 ## 📋 Common Problem Types
 
 ### 1. **Basic Adjacent Constraint**
 Can't take adjacent elements.
 
 ```java
+// Tabulation Version
 public int houseRobber(int[] nums) {
     return decisionMakingDP(nums, 0, nums.length);
 }
+
+// Memoization Version  
+public int houseRobberMemo(int[] nums) {
+    DecisionMakingMemo solver = new DecisionMakingMemo();
+    return solver.rob(nums);
+}
 ```
 
-**Example Problems:**
-- [House Robber - LeetCode 198](https://leetcode.com/problems/house-robber/) ⭐⭐⭐⭐⭐
-- Maximum Sum of Non-adjacent Elements
+**LeetCode Problems:**
+- [House Robber](https://leetcode.com/problems/house-robber/)
 - [Maximum Sum with No Two Adjacent](https://practice.geeksforgeeks.org/problems/max-sum-without-adjacents/0)
 
 ---
@@ -116,9 +213,8 @@ public int houseRobberII(int[] nums) {
 }
 ```
 
-**Example Problems:**
-- [House Robber II - LeetCode 213](https://leetcode.com/problems/house-robber-ii/) ⭐⭐⭐⭐
-- Circular Array Maximum Sum
+**LeetCode Problems:**
+- [House Robber II](https://leetcode.com/problems/house-robber-ii/)
 
 ---
 
@@ -146,8 +242,8 @@ public int deleteAndEarn(int[] nums) {
 }
 ```
 
-**Example Problems:**
-- [Delete and Earn - LeetCode 740](https://leetcode.com/problems/delete-and-earn/) ⭐⭐⭐⭐
+**LeetCode Problems:**
+- [Delete and Earn](https://leetcode.com/problems/delete-and-earn/)
 - [Stickler Thief](https://practice.geeksforgeeks.org/problems/stickler-theif-1587115621/1)
 
 ---
@@ -155,7 +251,7 @@ public int deleteAndEarn(int[] nums) {
 ### 4. **Counting Variants** (Same Pattern, Different Goal)
 Instead of maximizing value, count number of ways. These follow the same pattern but use ADDITION instead of MAX.
 
-#### Climbing Stairs
+#### Climbing Stairs (Tabulation)
 ```java
 public int climbStairs(int n) {
     if (n <= 2) return n;
@@ -175,10 +271,25 @@ public int climbStairs(int n) {
 }
 ```
 
-**Why not use universal template?**
-- Universal template uses `Math.max()` for optimization
-- Counting uses addition
-- Same pattern, different operation
+#### Climbing Stairs (Memoization)
+```java
+class ClimbingStairsMemo {
+    Map<Integer, Integer> memo = new HashMap<>();
+    
+    public int climbStairs(int n) {
+        return climbHelper(n);
+    }
+    
+    private int climbHelper(int n) {
+        if (n <= 2) return n;
+        if (memo.containsKey(n)) return memo.get(n);
+        
+        int result = climbHelper(n - 1) + climbHelper(n - 2);
+        memo.put(n, result);
+        return result;
+    }
+}
+```
 
 #### Decode Ways
 ```java
@@ -215,10 +326,10 @@ public int numDecodings(String s) {
 - **House Robber types**: Find maximum value → use MAX
 - **Climbing Stairs types**: Count total ways → use SUM
 
-**Example Problems:**
-- [Climbing Stairs - LeetCode 70](https://leetcode.com/problems/climbing-stairs/) ⭐⭐⭐⭐⭐
-- [Decode Ways - LeetCode 91](https://leetcode.com/problems/decode-ways/) ⭐⭐⭐⭐
-- [Fibonacci Number - LeetCode 509](https://leetcode.com/problems/fibonacci-number/) ⭐⭐⭐
+**LeetCode Problems:**
+- [Climbing Stairs](https://leetcode.com/problems/climbing-stairs/)
+- [Decode Ways](https://leetcode.com/problems/decode-ways/)
+- [Fibonacci Number](https://leetcode.com/problems/fibonacci-number/)
 
 ---
 
@@ -241,26 +352,30 @@ int prevOne = nums[start + 1];  // Should be max(nums[start], nums[start + 1])
 // ❌ Off-by-one in circular
 // Exclude last: [0, n-1)  NOT [0, n-2)
 // Exclude first: [1, n)   NOT [2, n)
+
+// ❌ Memoization without proper key
+// Use unique key combining all state variables
 ```
 
 ### Interview Tips:
 1. **Start simple**: Explain the take/skip choice
 2. **Draw example**: Show how prevTwo and prevOne work
-3. **Mention optimization**: O(n) time, O(1) space
-4. **Test edge cases**: [], [5], [1,2]
+3. **Mention both approaches**: "I can solve this iteratively or recursively"
+4. **Mention optimization**: O(n) time, O(1) space for tabulation
+5. **Test edge cases**: [], [5], [1,2]
 
 ---
 
 ## 📊 Pattern Variations
 
-| Type | Frequency | Difficulty | Key Insight |
-|------|-----------|------------|-------------|
-| Basic Adjacent | ⭐⭐⭐⭐⭐ | Easy | Direct template |
-| Delete and Earn | ⭐⭐⭐⭐ | Medium | Transform first |
-| Circular | ⭐⭐⭐ | Medium | Solve twice |
-| Counting Ways | ⭐⭐⭐⭐⭐ | Easy | ADD instead of MAX |
-| Decode Ways | ⭐⭐⭐ | Medium | Counting with validation |
-| K-distance | ⭐ | Hard | Different template |
+| Type | Frequency | Difficulty | Best Approach | Key Insight |
+|------|-----------|------------|---------------|-------------|
+| Basic Adjacent | ⭐⭐⭐⭐⭐ | Easy | Tabulation | Direct template |
+| Delete and Earn | ⭐⭐⭐⭐ | Medium | Tabulation | Transform first |
+| Circular | ⭐⭐⭐ | Medium | Tabulation | Solve twice |
+| Counting Ways | ⭐⭐⭐⭐⭐ | Easy | Either | ADD instead of MAX |
+| Decode Ways | ⭐⭐⭐ | Medium | Tabulation | Counting with validation |
+| Tree Variations | ⭐⭐ | Hard | Memoization | Natural recursion |
 
 ---
 
@@ -278,9 +393,17 @@ This works for ALL variations:
 
 ## 🎯 Quick Reference
 
-### The Golden Formula:
+### The Golden Formula (Tabulation):
 ```java
 current = Math.max(nums[i] + prevTwo, prevOne)
+```
+
+### The Golden Formula (Memoization):
+```java
+result = Math.max(
+    nums[index] + solve(index + 2),  // take current
+    solve(index + 1)                 // skip current
+)
 ```
 
 ### Problem Identification:
@@ -288,23 +411,47 @@ current = Math.max(nums[i] + prevTwo, prevOne)
 Adjacent constraint? → Basic template
 Circular mentioned? → Solve twice
 Value-based constraint? → Transform first
+Count ways? → Use ADD instead of MAX
 ```
 
 ### Time & Space:
-- Time: O(n) - single pass
-- Space: O(1) - only two variables
+- **Tabulation**: O(n) time, O(1) space
+- **Memoization**: O(n) time, O(n) space
 
 ---
 
 ## 📚 Practice Problems (In Order)
 
-### Optimization Problems:
-1. **Start Here**: [House Robber](https://leetcode.com/problems/house-robber/)
-2. **Then**: [Delete and Earn](https://leetcode.com/problems/delete-and-earn/)
-3. **Finally**: [House Robber II](https://leetcode.com/problems/house-robber-ii/)
+### Start Here (Optimization Problems):
+1. **[House Robber](https://leetcode.com/problems/house-robber/)** - Basic pattern
+2. **[Delete and Earn](https://leetcode.com/problems/delete-and-earn/)** - Transform technique
+3. **[House Robber II](https://leetcode.com/problems/house-robber-ii/)** - Circular constraint
 
-### Counting Problems:
-1. **Start Here**: [Climbing Stairs](https://leetcode.com/problems/climbing-stairs/)
-2. **Then**: [Decode Ways](https://leetcode.com/problems/decode-ways/)
+### Then Try (Counting Problems):
+4. **[Climbing Stairs](https://leetcode.com/problems/climbing-stairs/)** - Count ways
+5. **[Decode Ways](https://leetcode.com/problems/decode-ways/)** - Advanced counting
 
-Master these 5 and you'll handle 95% of Decision Making DP problems!
+### Advanced (Optional):
+6. **[House Robber III](https://leetcode.com/problems/house-robber-iii/)** - Tree DP variation
+
+**Master these 5 core problems and you'll handle 95% of Decision Making DP problems!**
+
+---
+
+## 🎯 Interview Communication Script
+
+```
+"I notice this is a Decision Making DP problem because:
+1. I have a binary choice at each element (take or skip)
+2. Taking current element affects future choices (can't take adjacent)
+3. I'm trying to optimize (maximize sum)
+
+I'll solve this using dynamic programming with a bottom-up approach.
+My state will be: dp[i] = maximum sum from elements 0 to i.
+The recurrence is: dp[i] = max(nums[i] + dp[i-2], dp[i-1])
+
+[Implement solution]
+
+This can also be solved recursively with memoization if preferred.
+Time complexity: O(n), Space complexity: O(1) for tabulation."
+```
