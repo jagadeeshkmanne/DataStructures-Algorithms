@@ -6,16 +6,16 @@ Complete DP pattern collection for mastering dynamic programming through pattern
 
 ## 📋 **All DP Patterns**
 
-| Pattern | Template |
-|---------|----------|
-| **Decision Making** | [View →](./dp/decision-making.md) |
-| **Knapsack** | [View →](./dp/knapsack.md) |
-| **Grid Path** | [View →](./dp/grid-path.md) |
-| **String DP** | [View →](./dp/string-dp.md) |
-| **Tree DP** | [View →](./dp/tree-dp.md) |
-| **Graph DP** | [View →](./dp/graph-dp.md) |
-| **Interval DP** | [View →](./dp/interval-dp.md) |
-| **LIS Pattern** | [View →](./dp/lis-pattern.md) |
+| Pattern | Identification Tips |
+|---------|-------------------|
+| **[Decision Making](./dp/decision-making.md)** | Take/skip choices with adjacent constraints |
+| **[Knapsack](./dp/knapsack.md)** | Limited capacity + items with cost/value |
+| **[Grid Path](./dp/grid-path.md)** | 2D movement with path optimization |
+| **[String DP](./dp/string-dp.md)** | Two strings character comparison |
+| **[Tree DP](./dp/tree-dp.md)** | Tree structure with node choices |
+| **[Graph DP](./dp/graph-dp.md)** | DAG traversal with optimization |
+| **[Interval DP](./dp/interval-dp.md)** | Optimal range splitting |
+| **[LIS Pattern](./dp/lis-pattern.md)** | Longest increasing sequence |
 
 ---
 
@@ -50,50 +50,6 @@ What am I deciding at each step?
 
 ---
 
-## ⚡ **Quick Recognition Tips**
-
-### **Decision Making**
-- **Choice**: Take current OR skip current
-- **Constraint**: Taking affects future choices (adjacent/consecutive)
-- **LeetCode**: [House Robber](https://leetcode.com/problems/house-robber/), [Climbing Stairs](https://leetcode.com/problems/climbing-stairs/), [House Robber II](https://leetcode.com/problems/house-robber-ii/)
-
-### **Knapsack** 
-- **Choice**: Include item OR exclude item
-- **Constraint**: Limited capacity/budget
-- **LeetCode**: [Coin Change](https://leetcode.com/problems/coin-change/), [Target Sum](https://leetcode.com/problems/target-sum/), [Partition Equal Subset Sum](https://leetcode.com/problems/partition-equal-subset-sum/)
-
-### **Grid Path**
-- **Choice**: Path directions (right/down/diagonal)
-- **Constraint**: Grid boundaries
-- **LeetCode**: [Unique Paths](https://leetcode.com/problems/unique-paths/), [Minimum Path Sum](https://leetcode.com/problems/minimum-path-sum/), [Unique Paths II](https://leetcode.com/problems/unique-paths-ii/)
-
-### **String DP**
-- **Choice**: Match characters OR skip characters  
-- **Constraint**: Two strings to compare
-- **LeetCode**: [Longest Common Subsequence](https://leetcode.com/problems/longest-common-subsequence/), [Edit Distance](https://leetcode.com/problems/edit-distance/), [Word Break](https://leetcode.com/problems/word-break/)
-
-### **Tree DP**
-- **Choice**: Include node OR exclude node in path
-- **Constraint**: Tree structure
-- **LeetCode**: [Binary Tree Maximum Path Sum](https://leetcode.com/problems/binary-tree-maximum-path-sum/), [House Robber III](https://leetcode.com/problems/house-robber-iii/)
-
-### **Graph DP**
-- **Choice**: Visit node OR skip node
-- **Constraint**: Graph structure (usually DAG)
-- **LeetCode**: [Longest Increasing Path in a Matrix](https://leetcode.com/problems/longest-increasing-path-in-a-matrix/), [Cherry Pickup II](https://leetcode.com/problems/cherry-pickup-ii/)
-
-### **Interval DP**
-- **Choice**: Where to split the interval
-- **Constraint**: Optimal splitting points
-- **LeetCode**: [Burst Balloons](https://leetcode.com/problems/burst-balloons/), [Minimum Score Triangulation of Polygon](https://leetcode.com/problems/minimum-score-triangulation-of-polygon/)
-
-### **LIS**
-- **Choice**: Extend sequence OR start new sequence
-- **Constraint**: Maintain increasing order
-- **LeetCode**: [Longest Increasing Subsequence](https://leetcode.com/problems/longest-increasing-subsequence/), [Russian Doll Envelopes](https://leetcode.com/problems/russian-doll-envelopes/)
-
----
-
 ## 🎯 **Quick Start**
 
 1. **Read any DP problem**
@@ -101,7 +57,7 @@ What am I deciding at each step?
 3. **Click on the matching pattern template**
 4. **Follow the template approach**
 
-Each template includes thinking process, code templates, and practice problems.
+Each template includes thinking process, recognition tips, LeetCode problems, code templates, and practice problems.
 
 ---
 
