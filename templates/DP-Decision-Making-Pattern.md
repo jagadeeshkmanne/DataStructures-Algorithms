@@ -152,6 +152,76 @@ public int deleteAndEarn(int[] nums) {
 
 ---
 
+### 4. **Counting Variants** (Same Pattern, Different Goal)
+Instead of maximizing value, count number of ways. These follow the same pattern but use ADDITION instead of MAX.
+
+#### Climbing Stairs
+```java
+public int climbStairs(int n) {
+    if (n <= 2) return n;
+    
+    // Same structure as decisionMakingDP but with addition
+    int twoBack = 1;  // ways to reach step 1
+    int oneBack = 2;  // ways to reach step 2
+    
+    for (int i = 3; i <= n; i++) {
+        // Core difference: ADD instead of MAX
+        int current = twoBack + oneBack;
+        twoBack = oneBack;
+        oneBack = current;
+    }
+    
+    return oneBack;
+}
+```
+
+**Why not use universal template?**
+- Universal template uses `Math.max()` for optimization
+- Counting uses addition
+- Same pattern, different operation
+
+#### Decode Ways
+```java
+public int numDecodings(String s) {
+    if (s.length() == 0 || s.charAt(0) == '0') return 0;
+    
+    int n = s.length();
+    int twoBack = 1;  // empty string
+    int oneBack = 1;  // first character
+    
+    for (int i = 2; i <= n; i++) {
+        int current = 0;
+        
+        // Single digit decode
+        if (s.charAt(i-1) != '0') {
+            current += oneBack;  // ADD ways
+        }
+        
+        // Two digit decode  
+        int twoDigit = Integer.parseInt(s.substring(i-2, i));
+        if (twoDigit >= 10 && twoDigit <= 26) {
+            current += twoBack;  // ADD ways
+        }
+        
+        twoBack = oneBack;
+        oneBack = current;
+    }
+    
+    return oneBack;
+}
+```
+
+**Key Insight**: These problems follow the Decision Making pattern (binary choices affecting future) but optimize differently:
+- **House Robber types**: Find maximum value → use MAX
+- **Climbing Stairs types**: Count total ways → use SUM
+
+**Example Problems:**
+- [Climbing Stairs - LeetCode 70](https://leetcode.com/problems/climbing-stairs/) ⭐⭐⭐⭐⭐
+- [Decode Ways - LeetCode 91](https://leetcode.com/problems/decode-ways/) ⭐⭐⭐⭐
+- [Fibonacci Number - LeetCode 509](https://leetcode.com/problems/fibonacci-number/) ⭐⭐⭐
+
+---
+
 ## 💡 Tips & Strategies
 
 ### Recognition Tips:
@@ -188,6 +258,8 @@ int prevOne = nums[start + 1];  // Should be max(nums[start], nums[start + 1])
 | Basic Adjacent | ⭐⭐⭐⭐⭐ | Easy | Direct template |
 | Delete and Earn | ⭐⭐⭐⭐ | Medium | Transform first |
 | Circular | ⭐⭐⭐ | Medium | Solve twice |
+| Counting Ways | ⭐⭐⭐⭐⭐ | Easy | ADD instead of MAX |
+| Decode Ways | ⭐⭐⭐ | Medium | Counting with validation |
 | K-distance | ⭐ | Hard | Different template |
 
 ---
@@ -226,8 +298,13 @@ Value-based constraint? → Transform first
 
 ## 📚 Practice Problems (In Order)
 
+### Optimization Problems:
 1. **Start Here**: [House Robber](https://leetcode.com/problems/house-robber/)
 2. **Then**: [Delete and Earn](https://leetcode.com/problems/delete-and-earn/)
 3. **Finally**: [House Robber II](https://leetcode.com/problems/house-robber-ii/)
 
-Master these 3 and you'll handle 90% of Decision Making DP problems!
+### Counting Problems:
+1. **Start Here**: [Climbing Stairs](https://leetcode.com/problems/climbing-stairs/)
+2. **Then**: [Decode Ways](https://leetcode.com/problems/decode-ways/)
+
+Master these 5 and you'll handle 95% of Decision Making DP problems!
